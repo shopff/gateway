@@ -1,4 +1,4 @@
-package com.shopoo.gateway.security.utils;
+package com.shopff.gateway.security.utils;
 
 /**
  * @Description:

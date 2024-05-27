@@ -1,4 +1,4 @@
-package com.shopoo.gateway.fallback;
+package com.shopff.gateway.fallback;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,7 +1,7 @@
-package com.shopoo.gateway.security.filter;
+package com.shopff.gateway.security.filter;
 
-import com.shopoo.gateway.security.dto.bo.UserInfo;
-import com.shopoo.gateway.security.component.JwtService;
+import com.shopff.gateway.security.dto.bo.UserInfo;
+import com.shopff.gateway.security.component.JwtService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextImpl;

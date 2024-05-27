@@ -1,4 +1,4 @@
-package com.shopoo.gateway;
+package com.shopff.gateway;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Value;

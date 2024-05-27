@@ -1,13 +1,12 @@
-package com.shopoo.gateway.security.config;
+package com.shopff.gateway.security.config;
 
-import com.shopoo.gateway.security.component.JwtReactiveUserDetailsService;
-import com.shopoo.gateway.security.component.JwtUserDetailsRepositoryReactiveAuthenticationManager;
-import com.shopoo.gateway.security.converter.JwtAuthenticationConverter;
-import com.shopoo.gateway.security.dto.bo.UserInfo;
-import com.shopoo.gateway.security.filter.JwtUsernamePasswordAuthenticationWebFilter;
-import com.shopoo.gateway.security.filter.JwtAuthorizationFilter;
-import com.shopoo.gateway.security.component.JwtService;
-import com.shopoo.gateway.security.utils.Constants;
+import com.shopff.gateway.security.component.JwtReactiveUserDetailsService;
+import com.shopff.gateway.security.component.JwtService;
+import com.shopff.gateway.security.component.JwtUserDetailsRepositoryReactiveAuthenticationManager;
+import com.shopff.gateway.security.converter.JwtAuthenticationConverter;
+import com.shopff.gateway.security.filter.JwtAuthorizationFilter;
+import com.shopff.gateway.security.filter.JwtUsernamePasswordAuthenticationWebFilter;
+import com.shopff.gateway.security.utils.Constants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;

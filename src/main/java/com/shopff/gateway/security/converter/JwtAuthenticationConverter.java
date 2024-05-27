@@ -1,4 +1,4 @@
-package com.shopoo.gateway.security.converter;
+package com.shopff.gateway.security.converter;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

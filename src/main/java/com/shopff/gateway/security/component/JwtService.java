@@ -1,12 +1,11 @@
-package com.shopoo.gateway.security.component;
+package com.shopff.gateway.security.component;
 
 import com.google.gson.Gson;
-import com.shopoo.gateway.security.dto.bo.UserInfo;
-import com.shopoo.gateway.security.config.SecurityConfigProperties;
+import com.shopff.gateway.security.config.SecurityConfigProperties;
+import com.shopff.gateway.security.dto.bo.UserInfo;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;

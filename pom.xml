@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.szmengran</groupId>
+    <groupId>com.shopff</groupId>
     <artifactId>gateway</artifactId>
     <version>2024.05</version>
 
@@ -154,7 +154,7 @@
                         <ports>
                             <port>8903</port>
                         </ports>
-                        <mainClass>com.shopoo.gateway.Application</mainClass>
+                        <mainClass>com.shopff.gateway.Application</mainClass>
                     </container>
                 </configuration>
                 <executions>

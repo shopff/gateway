@@ -1,10 +1,10 @@
-package com.shopoo.gateway.security.filter;
+package com.shopff.gateway.security.filter;
 
 import com.google.gson.Gson;
-import com.shopoo.gateway.security.converter.JwtAuthenticationConverter;
-import com.shopoo.gateway.security.dto.bo.UserInfo;
-import com.shopoo.gateway.security.dto.co.TokenCO;
-import com.shopoo.gateway.security.component.JwtService;
+import com.shopff.gateway.security.component.JwtService;
+import com.shopff.gateway.security.converter.JwtAuthenticationConverter;
+import com.shopff.gateway.security.dto.bo.UserInfo;
+import com.shopff.gateway.security.dto.co.TokenCO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;

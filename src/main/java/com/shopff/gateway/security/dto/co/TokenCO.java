@@ -1,4 +1,4 @@
-package com.shopoo.gateway.security.dto.co;
+package com.shopff.gateway.security.dto.co;
 
 import com.szmengran.cola.dto.ClientObject;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.shopoo.gateway.security.config;
+package com.shopff.gateway.security.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

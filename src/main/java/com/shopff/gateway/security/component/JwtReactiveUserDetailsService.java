@@ -1,6 +1,6 @@
-package com.shopoo.gateway.security.component;
+package com.shopff.gateway.security.component;
 
-import com.shopoo.gateway.security.dto.bo.UserInfo;
+import com.shopff.gateway.security.dto.bo.UserInfo;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

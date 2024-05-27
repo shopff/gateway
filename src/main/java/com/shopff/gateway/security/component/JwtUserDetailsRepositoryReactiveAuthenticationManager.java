@@ -1,4 +1,4 @@
-package com.shopoo.gateway.security.component;
+package com.shopff.gateway.security.component;
 
 import org.springframework.security.authentication.AbstractUserDetailsReactiveAuthenticationManager;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
