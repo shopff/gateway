@@ -4,14 +4,10 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Description:
@@ -47,7 +43,7 @@ public class UserInfo implements UserDetails {
     /**
      * 权限数据
      */
-    private Collection<? extends GrantedAuthority> authorities;
+    private Set<SimpleGrantedAuthority> authorities;
 
 
     @Override
@@ -81,13 +77,13 @@ public class UserInfo implements UserDetails {
     }
 
     public UserInfo roles(String... roles) {
-        List<GrantedAuthority> authorities = new ArrayList<>(roles.length);
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
         for (String role : roles) {
             Assert.isTrue(!role.startsWith("ROLE_"),
                     () -> role + " cannot start with ROLE_ (it is automatically added)");
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
         }
-        setAuthorities(authorities);
+        this.setAuthorities(authorities);
         return this;
     }
 

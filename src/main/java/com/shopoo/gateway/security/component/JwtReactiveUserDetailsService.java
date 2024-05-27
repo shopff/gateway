@@ -22,6 +22,7 @@ public class JwtReactiveUserDetailsService implements ReactiveUserDetailsService
                 .enabled(true)
                 .build();
 
+        user.roles("user");
         return Mono.just(user);
     }
 }
