@@ -1,10 +1,17 @@
 package com.shopoo.gateway.security.dto.bo;
 
+import lombok.Builder;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.Assert;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @Description:
@@ -12,12 +19,19 @@ import java.util.Collection;
  * @Date: 2024/05/23 19:32
  */
 @Data
+@Builder
 public class UserInfo implements UserDetails {
 
     /**
      * 用户ID
      */
     private Long id;
+
+    /**
+     * 昵称
+     */
+    private String nickname;
+
     /**
      * 用户名
      */
@@ -33,7 +47,7 @@ public class UserInfo implements UserDetails {
     /**
      * 权限数据
      */
-    private Collection<SimpleGrantedAuthority> authorities;
+    private Collection<? extends GrantedAuthority> authorities;
 
 
     @Override
@@ -65,4 +79,16 @@ public class UserInfo implements UserDetails {
     public boolean isEnabled() {
         return this.enabled;
     }
+
+    public UserInfo roles(String... roles) {
+        List<GrantedAuthority> authorities = new ArrayList<>(roles.length);
+        for (String role : roles) {
+            Assert.isTrue(!role.startsWith("ROLE_"),
+                    () -> role + " cannot start with ROLE_ (it is automatically added)");
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+        }
+        setAuthorities(authorities);
+        return this;
+    }
+
 }

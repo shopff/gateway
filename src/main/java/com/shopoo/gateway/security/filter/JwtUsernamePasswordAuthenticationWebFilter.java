@@ -2,6 +2,7 @@ package com.shopoo.gateway.security.filter;
 
 import com.google.gson.Gson;
 import com.shopoo.gateway.security.converter.JwtAuthenticationConverter;
+import com.shopoo.gateway.security.dto.bo.UserInfo;
 import com.shopoo.gateway.security.dto.co.TokenCO;
 import com.shopoo.gateway.security.component.JwtService;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
@@ -23,18 +23,19 @@ import reactor.core.publisher.Mono;
  * @Auther: Maoyuan.Li
  * @Date: 2024/05/23 21:10
  */
-public class JwtAuthenticationWebFilter extends AuthenticationWebFilter implements ServerAuthenticationFailureHandler {
+public class JwtUsernamePasswordAuthenticationWebFilter extends AuthenticationWebFilter implements ServerAuthenticationFailureHandler {
 
     private final JwtService jwtService;
 
-    public JwtAuthenticationWebFilter(ReactiveAuthenticationManager authenticationManager, JwtService jwtService) {
+    public JwtUsernamePasswordAuthenticationWebFilter(ReactiveAuthenticationManager authenticationManager, JwtService jwtService) {
         super(authenticationManager);
         this.jwtService = jwtService;
     }
 
     @Override
     protected Mono<Void> onAuthenticationSuccess(Authentication authentication, WebFilterExchange webFilterExchange) {
-        String token = jwtService.generateToken((User) authentication.getPrincipal());
+        Object user = authentication.getPrincipal();
+        String token = jwtService.generateToken((UserInfo)user);
         ServerWebExchange exchange = webFilterExchange.getExchange();
         ServerHttpResponse response = exchange.getResponse();
 

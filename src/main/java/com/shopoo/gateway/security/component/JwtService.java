@@ -22,7 +22,7 @@ public class JwtService {
     @Autowired
     private SecurityConfigProperties securityConfigProperties;
 
-    public String generateToken(User userInfo) {
+    public String generateToken(UserInfo userInfo) {
         return Jwts.builder()
                 .setSubject(new Gson().toJson(userInfo))
                 .setExpiration(new Date(System.currentTimeMillis() + securityConfigProperties.getExpireTime()))
