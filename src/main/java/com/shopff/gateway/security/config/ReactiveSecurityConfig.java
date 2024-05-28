@@ -61,12 +61,12 @@ public class ReactiveSecurityConfig {
         usernamePasswordAuthenticationWebFilter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers(Constants.JWT_LOGIN_PATH));
         usernamePasswordAuthenticationWebFilter.setServerAuthenticationConverter(new JwtAuthenticationConverter());
 
-        http
-                .csrf().disable()
-                .authorizeExchange()
-                .pathMatchers(Constants.JWT_LOGIN_PATH, "/login").permitAll()
-                .anyExchange().authenticated()
-                .and()
+        http.csrf(csrfSpec -> csrfSpec.disable())
+                .authorizeExchange(authorizeExchangeSpec -> {
+                    authorizeExchangeSpec
+                            .pathMatchers(Constants.JWT_LOGIN_PATH).permitAll()
+                            .anyExchange().authenticated();
+                })
                 .addFilterBefore(usernamePasswordAuthenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .securityContextRepository(new JwtAuthorizationFilter(jwtService));
 
