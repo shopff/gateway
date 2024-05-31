@@ -1,4 +1,4 @@
-package com.shopff.gateway.security.component;
+package com.shopff.gateway.security.service;
 
 import com.google.gson.Gson;
 import com.shopff.gateway.security.config.SecurityConfigProperties;

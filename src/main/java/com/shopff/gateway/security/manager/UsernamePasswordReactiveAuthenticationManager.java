@@ -1,9 +1,8 @@
-package com.shopff.gateway.security.component;
+package com.shopff.gateway.security.manager;
 
 import org.springframework.security.authentication.AbstractUserDetailsReactiveAuthenticationManager;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
@@ -12,11 +11,11 @@ import reactor.core.publisher.Mono;
  * @Auther: Maoyuan.Li
  * @Date: 2024/05/25 10:58
  */
-public class JwtUserDetailsRepositoryReactiveAuthenticationManager extends AbstractUserDetailsReactiveAuthenticationManager {
+public class UsernamePasswordReactiveAuthenticationManager extends AbstractUserDetailsReactiveAuthenticationManager {
 
     private ReactiveUserDetailsService userDetailsService;
 
-    public JwtUserDetailsRepositoryReactiveAuthenticationManager(ReactiveUserDetailsService userDetailsService) {
+    public UsernamePasswordReactiveAuthenticationManager(ReactiveUserDetailsService userDetailsService) {
         Assert.notNull(userDetailsService, "userDetailsService cannot be null");
         this.userDetailsService = userDetailsService;
     }

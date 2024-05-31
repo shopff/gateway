@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
  * @Auther: Maoyuan.Li
  * @Date: 2024/05/23 21:11
  */
-public class JwtAuthenticationConverter implements ServerAuthenticationConverter {
+public class UsernamePasswordAuthenticationConverter implements ServerAuthenticationConverter {
 
     @Override
     public Mono<Authentication> convert(ServerWebExchange exchange) {

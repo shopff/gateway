@@ -1,4 +1,4 @@
-package com.shopff.gateway.security.component;
+package com.shopff.gateway.security.service;
 
 import com.shopff.gateway.security.dto.bo.UserInfo;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
  * @Auther: Maoyuan.Liø
  * @Date: 2024/05/26 11:44
  */
-public class JwtReactiveUserDetailsService implements ReactiveUserDetailsService {
+public class UsernamePasswordReactiveUserDetailsService implements ReactiveUserDetailsService {
 
     @Override
     public Mono<UserDetails> findByUsername(String username) {

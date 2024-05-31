@@ -9,4 +9,5 @@ public interface Constants {
 
     //jwt认证登陆url
     public static final String JWT_LOGIN_PATH = "/jwt/login";
+    public static final String SMS_LOGIN_PATH = "/sms/login";
 }

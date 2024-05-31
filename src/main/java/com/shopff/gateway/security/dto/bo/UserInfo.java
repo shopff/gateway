@@ -1,7 +1,12 @@
 package com.shopff.gateway.security.dto.bo;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
@@ -14,6 +19,7 @@ import java.util.*;
  * @Date: 2024/05/23 19:32
  */
 @Data
+@Slf4j
 @Builder
 public class UserInfo implements UserDetails {
 
@@ -86,4 +92,23 @@ public class UserInfo implements UserDetails {
         return this;
     }
 
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+
+    public void preAuthenticationChecks() {
+        log.debug("user info pre checks");
+        if (!this.isAccountNonLocked()) {
+            throw new LockedException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.locked",
+                    "User account is locked"));
+        }
+        if (!this.isEnabled()) {
+            throw new DisabledException(
+                    this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.disabled", "User is disabled"));
+        }
+        if (!this.isAccountNonExpired()) {
+            throw new AccountExpiredException(this.messages
+                    .getMessage("AbstractUserDetailsAuthenticationProvider.expired", "User account has expired"));
+        }
+    }
 }
