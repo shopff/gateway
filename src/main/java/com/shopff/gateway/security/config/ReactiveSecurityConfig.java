@@ -1,11 +1,13 @@
 package com.shopff.gateway.security.config;
 
-import com.shopff.gateway.security.service.*;
 import com.shopff.gateway.security.converter.UsernamePasswordAuthenticationConverter;
 import com.shopff.gateway.security.filter.JwtAuthorizationFilter;
-import com.shopff.gateway.security.filter.UsernamePasswordAuthenticationWebFilter;
 import com.shopff.gateway.security.filter.SmsAuthenticationWebFilter;
+import com.shopff.gateway.security.filter.UsernamePasswordAuthenticationWebFilter;
 import com.shopff.gateway.security.manager.SmsReactiveAuthenticationManager;
+import com.shopff.gateway.security.service.JwtService;
+import com.shopff.gateway.security.service.SmsReactiveUserDetailsService;
+import com.shopff.gateway.security.service.UsernamePasswordReactiveUserDetailsService;
 import com.shopff.gateway.security.utils.Constants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 
@@ -37,6 +40,8 @@ public class ReactiveSecurityConfig {
     private final JwtService jwtService;
     // 认证成功处理服务
     private final ServerAuthenticationSuccessHandler serverAuthenticationSuccessHandler;
+    // 认证失败处理服务
+    private final ServerAuthenticationFailureHandler serverAuthenticationFailureHandler;
 
     @Bean
     public ReactiveUserDetailsService userDetailsService() {
@@ -63,11 +68,14 @@ public class ReactiveSecurityConfig {
         usernamePasswordAuthenticationWebFilter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers(Constants.JWT_LOGIN_PATH));
         usernamePasswordAuthenticationWebFilter.setServerAuthenticationConverter(new UsernamePasswordAuthenticationConverter());
         usernamePasswordAuthenticationWebFilter.setAuthenticationSuccessHandler(serverAuthenticationSuccessHandler);
+        usernamePasswordAuthenticationWebFilter.setAuthenticationFailureHandler(serverAuthenticationFailureHandler);
 
         AuthenticationWebFilter smsAuthenticationWebFilter = new SmsAuthenticationWebFilter(smsAuthenticationManager(new SmsReactiveUserDetailsService()), jwtService);
         smsAuthenticationWebFilter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers(Constants.SMS_LOGIN_PATH));
         smsAuthenticationWebFilter.setServerAuthenticationConverter(new UsernamePasswordAuthenticationConverter());
         smsAuthenticationWebFilter.setAuthenticationSuccessHandler(serverAuthenticationSuccessHandler);
+        smsAuthenticationWebFilter.setAuthenticationFailureHandler(serverAuthenticationFailureHandler);
+
 
         http.csrf(csrfSpec -> csrfSpec.disable())
                 .authorizeExchange(authorizeExchangeSpec -> {

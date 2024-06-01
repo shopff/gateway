@@ -111,6 +111,10 @@
             <artifactId>cola-component-dto</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.szmengran.cola</groupId>
+            <artifactId>cola-component-exception</artifactId>
+        </dependency>
+        <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>

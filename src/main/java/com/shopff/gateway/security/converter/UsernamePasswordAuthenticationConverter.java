@@ -4,6 +4,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
+import org.springframework.util.Assert;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -19,11 +20,9 @@ public class UsernamePasswordAuthenticationConverter implements ServerAuthentica
         return exchange.getFormData().flatMap(data -> {
             String username = data.getFirst(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY);
             String password = data.getFirst(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY);
-            if (username != null && password != null) {
-                return Mono.just(new UsernamePasswordAuthenticationToken(username, password));
-            } else {
-                return Mono.empty();
-            }
+            Assert.notNull(username, "username cannot be null");
+            Assert.notNull(password, "password cannot be null");
+            return Mono.just(new UsernamePasswordAuthenticationToken(username, password));
         });
     }
 }

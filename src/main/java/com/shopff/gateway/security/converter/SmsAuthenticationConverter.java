@@ -5,6 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
+import org.springframework.util.Assert;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -20,11 +21,9 @@ public class SmsAuthenticationConverter implements ServerAuthenticationConverter
         return exchange.getFormData().flatMap(data -> {
             String phone = data.getFirst(SmsAuthenticationWebFilter.SPRING_SECURITY_FORM_PHONE_KEY);
             String code = data.getFirst(SmsAuthenticationWebFilter.SPRING_SECURITY_FORM_CODE_KEY);
-            if (phone != null && code != null) {
-                return Mono.just(new UsernamePasswordAuthenticationToken(phone, code));
-            } else {
-                return Mono.empty();
-            }
+            Assert.notNull(phone, "phone cannot be null");
+            Assert.notNull(code, "code cannot be null");
+            return Mono.just(new UsernamePasswordAuthenticationToken(phone, code));
         });
     }
 }

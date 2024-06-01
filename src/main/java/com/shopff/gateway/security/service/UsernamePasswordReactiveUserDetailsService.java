@@ -1,10 +1,15 @@
 package com.shopff.gateway.security.service;
 
 import com.shopff.gateway.security.dto.bo.UserInfo;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import reactor.core.publisher.Mono;
+
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @Description:
@@ -23,6 +28,7 @@ public class UsernamePasswordReactiveUserDetailsService implements ReactiveUserD
                 .build();
 
         user.roles("user");
+        Optional.ofNullable(user).orElseThrow(() -> new UsernameNotFoundException(String.format("username [%s] no found", username)));
         return Mono.just(user);
     }
 }
