@@ -2,7 +2,7 @@ package com.szmengran;
 
 import static org.junit.Assert.assertTrue;
 
-import com.shopff.gateway.security.dto.bo.UserInfo;
+import com.szmengran.gateway.security.dto.bo.UserInfo;
 import org.junit.Test;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
