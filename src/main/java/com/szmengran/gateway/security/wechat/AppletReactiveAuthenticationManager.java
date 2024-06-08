@@ -1,4 +1,4 @@
-package com.szmengran.gateway.security.manager;
+package com.szmengran.gateway.security.wechat;
 
 import org.springframework.security.authentication.AbstractUserDetailsReactiveAuthenticationManager;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
@@ -11,11 +11,11 @@ import reactor.core.publisher.Mono;
  * @Auther: Maoyuan.Li
  * @Date: 2024/05/25 10:58
  */
-public class UsernamePasswordReactiveAuthenticationManager extends AbstractUserDetailsReactiveAuthenticationManager {
+public class AppletReactiveAuthenticationManager extends AbstractUserDetailsReactiveAuthenticationManager {
 
     private ReactiveUserDetailsService userDetailsService;
 
-    public UsernamePasswordReactiveAuthenticationManager(ReactiveUserDetailsService userDetailsService) {
+    public AppletReactiveAuthenticationManager(ReactiveUserDetailsService userDetailsService) {
         Assert.notNull(userDetailsService, "userDetailsService cannot be null");
         this.userDetailsService = userDetailsService;
     }

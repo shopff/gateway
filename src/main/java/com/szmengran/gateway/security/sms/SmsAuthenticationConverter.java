@@ -1,6 +1,5 @@
-package com.szmengran.gateway.security.converter;
+package com.szmengran.gateway.security.sms;
 
-import com.szmengran.gateway.security.filter.SmsAuthenticationWebFilter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
@@ -15,11 +14,14 @@ import reactor.core.publisher.Mono;
  */
 public class SmsAuthenticationConverter implements ServerAuthenticationConverter {
 
+    public static final String SPRING_SECURITY_FORM_PHONE_KEY = "phone";
+    public static final String SPRING_SECURITY_FORM_CODE_KEY = "code";
+
     @Override
     public Mono<Authentication> convert(ServerWebExchange exchange) {
         return exchange.getFormData().flatMap(data -> {
-            String phone = data.getFirst(SmsAuthenticationWebFilter.SPRING_SECURITY_FORM_PHONE_KEY);
-            String code = data.getFirst(SmsAuthenticationWebFilter.SPRING_SECURITY_FORM_CODE_KEY);
+            String phone = data.getFirst(SPRING_SECURITY_FORM_PHONE_KEY);
+            String code = data.getFirst(SPRING_SECURITY_FORM_CODE_KEY);
             Assert.notNull(phone, "phone cannot be null");
             Assert.notNull(code, "code cannot be null");
             return Mono.just(new UsernamePasswordAuthenticationToken(phone, code));

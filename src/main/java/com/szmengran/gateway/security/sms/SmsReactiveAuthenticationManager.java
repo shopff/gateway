@@ -1,4 +1,4 @@
-package com.szmengran.gateway.security.manager;
+package com.szmengran.gateway.security.sms;
 
 import com.szmengran.gateway.security.dto.bo.UserInfo;
 import org.springframework.security.authentication.AbstractUserDetailsReactiveAuthenticationManager;
