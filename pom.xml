@@ -133,10 +133,31 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.4</version>
+                <configuration>
+                    <from>
+                        <image></image>
+                    </from>
+                    <to>
+                        <image>myimage</image>
+                    </to>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
                 <version>3.3.1</version>
                 <configuration>
                     <from>
-                        <image>registry.cn-guangzhou.aliyuncs.com/szmengran/szmengran-docker-base:jdk17</image>
+                        <image>registry.cn-guangzhou.aliyuncs.com/szmengran/szmengran-docker-base:jdk17.0.12</image>
                     </from>
                     <to>
                         <image>registry.cn-guangzhou.aliyuncs.com/szmengran/gateway</image>
