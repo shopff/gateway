@@ -14,6 +14,7 @@
         <groupId>com.szmengran.cola</groupId>
         <artifactId>cola-components-dependencies</artifactId>
         <version>3.2.5</version>
+        <relativePath/>
     </parent>
 
     <properties>
