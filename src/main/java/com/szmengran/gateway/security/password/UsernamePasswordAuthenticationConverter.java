@@ -14,6 +14,7 @@ import reactor.core.publisher.Mono;
  * @Auther: Maoyuan.Li
  * @Date: 2024/05/23 21:11
  */
+@Component
 public class UsernamePasswordAuthenticationConverter implements ServerAuthenticationConverter {
 
     @Override

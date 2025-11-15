@@ -13,14 +13,17 @@ import reactor.core.publisher.Mono;
  * @Auther: Maoyuan.Li
  * @Date: 2024/05/25 10:58
  */
+@Primary
+@Component
 public class UsernamePasswordReactiveAuthenticationManager extends AbstractUserDetailsReactiveAuthenticationManager {
 
-    private ReactiveUserDetailsService userDetailsService;
+    private final ReactiveUserDetailsService userDetailsService;
 
     public UsernamePasswordReactiveAuthenticationManager(UsernamePasswordReactiveUserDetailsService userDetailsService) {
         Assert.notNull(userDetailsService, "userDetailsService cannot be null");
         this.userDetailsService = userDetailsService;
     }
+
     @Override
     protected Mono<UserDetails> retrieveUser(String username) {
         return this.userDetailsService.findByUsername(username);

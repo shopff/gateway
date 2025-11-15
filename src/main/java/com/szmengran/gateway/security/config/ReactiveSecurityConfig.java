@@ -4,6 +4,7 @@ import com.szmengran.gateway.security.filter.JwtAuthorizationFilter;
 import com.szmengran.gateway.security.service.JwtService;
 import com.szmengran.gateway.security.service.LoginPathService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -21,6 +22,7 @@ import java.util.List;
  * @Auther: Maoyuan.Li
  * @Date: 2024/05/23 21:06
  */
+@Slf4j
 @Configuration
 @EnableWebFluxSecurity
 @RequiredArgsConstructor
@@ -38,22 +40,24 @@ public class ReactiveSecurityConfig {
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        http.csrf(csrfSpec -> csrfSpec.disable());
+        http.csrf(ServerHttpSecurity.CsrfSpec::disable);
 
         http.authorizeExchange(
                 authorizeExchangeSpec -> {
                     loginPathService.forEach(service -> {
                         authorizeExchangeSpec.pathMatchers(service.getLoginPath()).permitAll();
                     });
+                    authorizeExchangeSpec.anyExchange().authenticated();
                 }
         );
-        http.authorizeExchange(authorizeExchangeSpec -> {
-            authorizeExchangeSpec.anyExchange().authenticated();
-        });
+
         authenticationWebFilterList.forEach(authenticationWebFilter -> {
             http.addFilterBefore(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION);
         });
+
         http.securityContextRepository(new JwtAuthorizationFilter(jwtService));
+
         return http.build();
     }
+
 }

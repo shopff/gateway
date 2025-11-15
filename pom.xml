@@ -4,16 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.shopff</groupId>
+    <groupId>com.szmengran</groupId>
     <artifactId>gateway</artifactId>
-    <version>2024.05</version>
+    <version>2025.11</version>
 
     <!-- 版本设置命令: mvn versions:set -DnewVersion=xxxx -DgenerateBackupPoms=false -->
 
     <parent>
         <groupId>com.szmengran.cola</groupId>
         <artifactId>cola-components-dependencies</artifactId>
-        <version>3.2.5</version>
+        <version>3.5.7</version>
         <relativePath/>
     </parent>
 
@@ -26,18 +26,8 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
+            <artifactId>spring-cloud-starter-gateway-server-webflux</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>org.apache.rocketmq</groupId>-->
-<!--            <artifactId>rocketmq-spring-boot-starter</artifactId>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -134,7 +124,7 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>3.4.5</version>
+                <version>3.4.6</version>
                 <configuration>
                     <from>
                         <image>registry.cn-guangzhou.aliyuncs.com/szmengran/szmengran-docker-base:jdk17.0.12</image>
@@ -161,19 +151,20 @@
                         <mainClass>com.szmengran.gateway.Application</mainClass>
                     </container>
                 </configuration>
-                <executions>
-                    <!-- 					 绑定生命周期:当执行package时执行goals中的jib命令-->
-                    <execution>
-                        <!--                        <id>latest</id>-->
-                        <!--<phase>package</phase>-->
-                        <phase>package</phase>
-                        <goals>
-                            <!--                            buildTar:只在本地生成tar压缩包  : build:生成并上传至你配置的docker仓库-->
-                            <goal>build</goal>
-                            <!--                            <goal>buildTar</goal>-->
-                        </goals>
-                    </execution>
-                </executions>
+                <!-- 如果需要构建容器，可以执行 mvn jib:build 命令 -->
+<!--                <executions>-->
+<!--                    &lt;!&ndash; 					 绑定生命周期:当执行package时执行goals中的jib命令&ndash;&gt;-->
+<!--                    <execution>-->
+<!--                        &lt;!&ndash;                        <id>latest</id>&ndash;&gt;-->
+<!--                        &lt;!&ndash;<phase>package</phase>&ndash;&gt;-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            &lt;!&ndash;                            buildTar:只在本地生成tar压缩包  : build:生成并上传至你配置的docker仓库&ndash;&gt;-->
+<!--                            <goal>build</goal>-->
+<!--                            &lt;!&ndash;                            <goal>buildTar</goal>&ndash;&gt;-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
             </plugin>
         </plugins>
     </build>

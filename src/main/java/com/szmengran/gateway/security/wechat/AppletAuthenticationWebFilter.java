@@ -15,12 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class AppletAuthenticationWebFilter extends AuthenticationWebFilter implements LoginPathService {
 
-    public AppletAuthenticationWebFilter(ServerAuthenticationSuccessHandler successHandler, ServerAuthenticationFailureHandler failureHandler) {
-        super(new AppletReactiveAuthenticationManager(new AppletReactiveUserDetailsService()));
+    public AppletAuthenticationWebFilter(AppletReactiveAuthenticationManager appletReactiveAuthenticationManager,
+                                         AppletAuthenticationConverter appletAuthenticationConverter,
+                                         ServerAuthenticationSuccessHandler successHandler, ServerAuthenticationFailureHandler failureHandler) {
+        super(appletReactiveAuthenticationManager);
         this.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers(getLoginPath()));
         this.setAuthenticationSuccessHandler(successHandler);
         this.setAuthenticationFailureHandler(failureHandler);
-        this.setServerAuthenticationConverter(new AppletAuthenticationConverter());
+        this.setServerAuthenticationConverter(appletAuthenticationConverter);
     }
 
     @Override

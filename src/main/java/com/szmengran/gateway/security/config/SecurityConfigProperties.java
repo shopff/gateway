@@ -1,10 +1,13 @@
 package com.szmengran.gateway.security.config;
 
+import io.jsonwebtoken.security.Keys;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.List;
 
 /**
@@ -32,6 +35,10 @@ public class SecurityConfigProperties {
 
     //黑名单配置
     private Black black = new Black();
+
+    public Key getKey() {
+        return Keys.hmacShaKeyFor(this.key.getBytes(StandardCharsets.UTF_8));
+    }
 
     @Data
     public static class White {

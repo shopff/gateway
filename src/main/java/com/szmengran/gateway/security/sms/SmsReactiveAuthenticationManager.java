@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
@@ -16,9 +17,10 @@ import reactor.core.publisher.Mono;
  * @Auther: Maoyuan.Li
  * @Date: 2024/05/25 10:58
  */
+@Component
 public class SmsReactiveAuthenticationManager extends AbstractUserDetailsReactiveAuthenticationManager {
 
-    private ReactiveUserDetailsService userDetailsService;
+    private final ReactiveUserDetailsService userDetailsService;
 
     public SmsReactiveAuthenticationManager(ReactiveUserDetailsService userDetailsService) {
         Assert.notNull(userDetailsService, "userDetailsService cannot be null");

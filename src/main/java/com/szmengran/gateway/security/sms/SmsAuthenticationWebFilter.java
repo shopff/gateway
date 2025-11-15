@@ -16,12 +16,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class SmsAuthenticationWebFilter extends AuthenticationWebFilter implements LoginPathService {
 
-    public SmsAuthenticationWebFilter(ServerAuthenticationSuccessHandler successHandler, ServerAuthenticationFailureHandler failureHandler) {
-        super(new SmsReactiveAuthenticationManager(new SmsReactiveUserDetailsService()));
+    public SmsAuthenticationWebFilter(SmsReactiveAuthenticationManager smsReactiveAuthenticationManager,
+                                      SmsAuthenticationConverter smsAuthenticationConverter,
+                                      ServerAuthenticationSuccessHandler successHandler, ServerAuthenticationFailureHandler failureHandler) {
+        super(smsReactiveAuthenticationManager);
         this.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers(getLoginPath()));
         this.setAuthenticationSuccessHandler(successHandler);
         this.setAuthenticationFailureHandler(failureHandler);
-        this.setServerAuthenticationConverter(new SmsAuthenticationConverter());
+        this.setServerAuthenticationConverter(smsAuthenticationConverter);
     }
 
     @Override

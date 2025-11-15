@@ -31,11 +31,11 @@ public class JwtAuthorizationFilter implements ServerSecurityContextRepository {
     @Override
     public Mono<SecurityContext> load(ServerWebExchange exchange) {
         String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        if (authHeader != null && authHeader.toLowerCase().startsWith("bearer ")) {
             String authToken = authHeader.substring(7);
             UserInfo userInfo = jwtService.getUsernameFromToken(authToken);
-            if (userInfo != null && jwtService.validateToken(authToken)) {
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userInfo.getUsername(), userInfo.getPassword(), userInfo.getAuthorities());
+            if (userInfo != null) {
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userInfo.getUsername(), null, userInfo.getAuthorities());
                 return Mono.just(new SecurityContextImpl(auth));
             }
         }
