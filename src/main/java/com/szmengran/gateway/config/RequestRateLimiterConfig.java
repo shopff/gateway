@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Primary;
 import reactor.core.publisher.Mono;
 
 import java.security.Principal;
+import java.util.Objects;
 
 /**
  * @Description 限流规则配置
@@ -27,7 +28,7 @@ public class RequestRateLimiterConfig {
     @Bean
     @Primary
     KeyResolver ipKeyResolver() {
-        return exchange -> Mono.just(exchange.getRequest().getRemoteAddress().getHostString());
+        return exchange -> Mono.just(Objects.requireNonNull(exchange.getRequest().getRemoteAddress()).getHostString());
     }
 
     /**

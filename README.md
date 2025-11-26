@@ -1,89 +1,415 @@
-# gateway
+# Gateway - Spring Cloud Gateway 微服务网关
 
+> 基于 Spring Cloud Gateway + WebFlux 的响应式 API 网关
 
+## 概述
 
-## Getting started
+这是一个现代化的微服务网关，负责请求路由、JWT Token 验证、限流熔断等功能。
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+**核心特性**：
+- ✅ 响应式架构（WebFlux）
+- ✅ JWT Token 认证
+- ✅ 动态路由配置（Nacos）
+- ✅ 服务发现（Nacos）
+- ✅ 限流熔断
+- ✅ 请求重试
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+**架构角色**：
+- **路由转发**：将请求路由到对应的微服务
+- **JWT 验证**：验证请求中的 JWT Token 有效性
+- **流量控制**：限流、熔断、重试等
+- **统一入口**：为所有微服务提供统一访问入口
 
-## Add your files
+## 技术栈
 
-- [ ] [Create](https://gitlab.com/-/experiment/new_project_readme_content:fb1a79fa5ede6efc00799d505963eb73?https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://gitlab.com/-/experiment/new_project_readme_content:fb1a79fa5ede6efc00799d505963eb73?https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://gitlab.com/-/experiment/new_project_readme_content:fb1a79fa5ede6efc00799d505963eb73?https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+| 组件 | 版本 |
+|-----|------|
+| Java | JDK 17 |
+| Spring Boot | 3.5.7 |
+| Spring Cloud Gateway | 4.3.0 |
+| Spring Security | 6.2.12 |
+| JWT (JJWT) | 0.11.2 |
+| Nacos | - |
+| Redis | 响应式 Lettuce 客户端 |
+
+## 项目结构
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/shopoo1/gateway.git
-git branch -M main
-git push -uf origin main
+gateway/
+├── pom.xml                              # Maven 配置
+├── Dockerfile                           # Docker 镜像构建
+├── README.md                            # 本文件
+├── NACOS-ROUTES-GUIDE.md               # Nacos 路由配置指南
+├── nacos-config-example.yaml           # Nacos 配置示例
+├── claude.md                           # 完整架构文档
+├── src/
+│   ├── main/
+│   │   ├── java/com/szmengran/gateway/
+│   │   │   ├── Application.java        # 启动类
+│   │   │   ├── config/                 # 配置类
+│   │   │   │   └── RequestRateLimiterConfig.java
+│   │   │   ├── security/               # 安全模块
+│   │   │   │   ├── config/
+│   │   │   │   │   └── ReactiveSecurityConfig.java
+│   │   │   │   ├── filter/
+│   │   │   │   │   └── JwtAuthorizationFilter.java
+│   │   │   │   └── service/
+│   │   │   │       └── JwtService.java
+│   │   │   └── fallback/
+│   │   │       └── FallbackController.java
+│   │   └── resources/
+│   │       └── application.yaml        # 主配置文件
+│   └── test/
+└── target/
 ```
 
-## Integrate with your tools
+## 快速开始
 
-- [ ] [Set up project integrations](https://gitlab.com/-/experiment/new_project_readme_content:fb1a79fa5ede6efc00799d505963eb73?https://docs.gitlab.com/ee/user/project/integrations/)
+### 前置条件
 
-## Collaborate with your team
+- JDK 17+
+- Maven 3.6+
+- Nacos Server
+- Redis
+- MySQL（用于 Auth Service）
 
-- [ ] [Invite team members and collaborators](https://gitlab.com/-/experiment/new_project_readme_content:fb1a79fa5ede6efc00799d505963eb73?https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://gitlab.com/-/experiment/new_project_readme_content:fb1a79fa5ede6efc00799d505963eb73?https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://gitlab.com/-/experiment/new_project_readme_content:fb1a79fa5ede6efc00799d505963eb73?https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Automatically merge when pipeline succeeds](https://gitlab.com/-/experiment/new_project_readme_content:fb1a79fa5ede6efc00799d505963eb73?https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+### 1. 配置环境变量
 
-## Test and Deploy
+```bash
+export ENVIRONMENT=dev
+export NACOS_USERNAME=nacos
+export NACOS_PASSWORD=nacos
+export NACOS_SERVER_ADDRESS=localhost:8848
+```
 
-Use the built-in continuous integration in GitLab.
+### 2. 在 Nacos 中配置路由
 
-- [ ] [Get started with GitLab CI/CD](https://gitlab.com/-/experiment/new_project_readme_content:fb1a79fa5ede6efc00799d505963eb73?https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://gitlab.com/-/experiment/new_project_readme_content:fb1a79fa5ede6efc00799d505963eb73?https://docs.gitlab.com/ee/user/application_security/sast/)
+**重要**：本项目使用 **Nacos 动态配置路由**，而非硬编码在代码中。
 
-***
+#### 步骤：
 
-# Editing this README
+1. 访问 Nacos 控制台：http://localhost:8848/nacos
+2. 登录（默认 nacos/nacos）
+3. 进入 **配置管理** → **配置列表**
+4. 创建配置：
+   - **Data ID**: `gateway.yaml`
+   - **Group**: `DEFAULT_GROUP`
+   - **配置格式**: `YAML`
+   - **配置内容**: 复制 `nacos-config-example.yaml` 中的内容
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://gitlab.com/-/experiment/new_project_readme_content:fb1a79fa5ede6efc00799d505963eb73?https://www.makeareadme.com/) for this template.
+详细配置指南请查看：[NACOS-ROUTES-GUIDE.md](./NACOS-ROUTES-GUIDE.md)
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+### 3. 本地运行
 
-## Name
-Choose a self-explaining name for your project.
+```bash
+# 构建
+mvn clean package
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+# 运行
+java -jar target/gateway-2025.11.jar
+```
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+### 4. Docker 运行
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+```bash
+# 使用 JIB 构建镜像
+mvn jib:build
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+# 运行容器
+docker run -d \
+  -p 8701:8701 \
+  -e NACOS_SERVER_ADDRESS=nacos:8848 \
+  -e NACOS_USERNAME=nacos \
+  -e NACOS_PASSWORD=nacos \
+  --name gateway \
+  registry.cn-guangzhou.aliyuncs.com/szmengran/gateway:2025.11
+```
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## 路由配置
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### 🎯 Nacos 动态路由（推荐）
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+本项目使用 Nacos 配置中心管理路由，支持动态修改无需重启。
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+**示例路由配置**：
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+```yaml
+spring:
+  cloud:
+    gateway:
+      routes:
+        # Auth Service 认证服务
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=0
+            - name: Retry
+              args:
+                retries: 3
+                statuses: SERVICE_UNAVAILABLE
+```
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+**完整配置指南**：请查看 [NACOS-ROUTES-GUIDE.md](./NACOS-ROUTES-GUIDE.md)
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+## API 端点
 
-## License
-For open source projects, say how it is licensed.
+### Gateway 端点 (8701)
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+| 端点 | 方法 | 说明 |
+|-----|------|------|
+| `/auth/**` | ALL | 认证服务（转发到 auth-service:8702） |
+| `/actuator/gateway/routes` | GET | 查看当前路由 |
+| `/actuator/gateway/refresh` | POST | 刷新路由 |
+| `/actuator/health` | GET | 健康检查 |
+| `/fallback` | GET | 熔断降级端点 |
 
+### 认证流程
+
+```bash
+# 1. 登录获取 Token (通过 Gateway 转发到 Auth Service)
+curl -X POST http://localhost:8701/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin"}'
+
+# 返回: {"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}
+
+# 2. 使用 Token 访问受保护的资源
+curl http://localhost:8701/api/users/me \
+  -H "Authorization: Bearer {YOUR_TOKEN}"
+```
+
+## 配置说明
+
+### application.yaml
+
+```yaml
+server:
+  port: 8701
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_SERVER_ADDRESS}
+      config:
+        server-addr: ${NACOS_SERVER_ADDRESS}
+  config:
+    import:
+      - nacos:gateway.yaml          # 路由配置
+      - nacos:shopoo-common.yaml    # 公共配置
+```
+
+### JWT 配置
+
+```yaml
+secure:
+  key: 5Vtq4Qf3XeThWmZq4t7w9zxCW3A1CNcR...  # 256-bit 密钥
+  issuer: szmengran
+  expireTime: 604800000  # 7 天
+```
+
+## 监控和运维
+
+### 查看当前路由
+
+```bash
+curl http://localhost:8701/actuator/gateway/routes | jq
+```
+
+### 刷新路由（Nacos 配置变更后自动刷新）
+
+```bash
+curl -X POST http://localhost:8701/actuator/gateway/refresh
+```
+
+### 健康检查
+
+```bash
+curl http://localhost:8701/actuator/health
+```
+
+### 查看 Prometheus 指标
+
+```bash
+curl http://localhost:8701/actuator/prometheus
+```
+
+## 限流配置
+
+Gateway 支持两种限流策略：
+
+1. **IP 限流**：基于客户端 IP 地址
+2. **用户限流**：基于认证用户身份
+
+限流使用 Redis 存储计数器，基于令牌桶算法。
+
+**Nacos 配置示例**：
+
+```yaml
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: api-service
+          uri: lb://api-service
+          predicates:
+            - Path=/api/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+                key-resolver: "#{@ipKeyResolver}"
+```
+
+## 熔断降级
+
+当后端服务不可用时，Gateway 会返回降级响应。
+
+**配置示例**：
+
+```yaml
+filters:
+  - name: CircuitBreaker
+    args:
+      name: myCircuitBreaker
+      fallbackUri: forward:/fallback
+```
+
+## 与 Auth Service 集成
+
+Gateway 与独立的 Auth Service 配合工作：
+
+```
+Client → Gateway (8701) → Auth Service (8702)
+              ↓
+         JWT Validation
+```
+
+- **Auth Service**：负责用户认证、Token 生成
+- **Gateway**：负责 Token 验证、请求路由
+
+详见：[Auth Service README](../auth-service/README.md)
+
+## 开发指南
+
+### 添加新的路由
+
+1. 登录 Nacos 控制台
+2. 编辑 `gateway.yaml` 配置
+3. 添加新路由配置
+4. 发布配置（Gateway 自动刷新）
+
+### 调试路由
+
+开启 Debug 日志：
+
+```yaml
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
+```
+
+### 自定义过滤器
+
+创建自定义 Gateway Filter：
+
+```java
+@Component
+public class CustomGatewayFilterFactory extends AbstractGatewayFilterFactory<CustomGatewayFilterFactory.Config> {
+
+    @Override
+    public GatewayFilter apply(Config config) {
+        return (exchange, chain) -> {
+            // 自定义逻辑
+            return chain.filter(exchange);
+        };
+    }
+
+    public static class Config {
+        // 配置属性
+    }
+}
+```
+
+## 常见问题
+
+### Q: 路由配置修改后没有生效？
+
+**A**: 检查以下几点：
+1. Nacos 配置是否正确发布
+2. Gateway 日志是否有配置刷新记录
+3. Data ID 和 Group 是否正确
+4. 手动刷新：`curl -X POST http://localhost:8701/actuator/gateway/refresh`
+
+### Q: JWT Token 验证失败？
+
+**A**: 确认：
+1. Token 格式正确（`Bearer {token}`）
+2. Token 未过期
+3. 签名密钥配置一致（Gateway 和 Auth Service）
+
+### Q: 如何实现灰度发布？
+
+**A**: 使用 Weight 断言实现流量分配，详见 [NACOS-ROUTES-GUIDE.md](./NACOS-ROUTES-GUIDE.md)
+
+## 部署架构
+
+```
+┌─────────────┐
+│   Client    │
+└──────┬──────┘
+       │
+       ▼
+┌──────────────────┐
+│  Gateway (8701)  │
+│  - JWT 验证      │
+│  - 路由转发      │
+│  - 限流熔断      │
+└──────┬───────────┘
+       │
+   ┌───┴────┐
+   │        │
+   ▼        ▼
+Auth     Other
+Service  Services
+(8702)
+```
+
+## 性能优化
+
+- **连接池**：使用 Reactor Netty 连接池
+- **缓存**：Redis 缓存用户信息
+- **异步非阻塞**：WebFlux 响应式架构
+- **水平扩展**：多实例部署 + Nginx 负载均衡
+
+## 安全特性
+
+- ✅ JWT Token 认证
+- ✅ HTTPS 支持（建议在生产环境启用）
+- ✅ CORS 配置
+- ✅ 限流防止 DDoS
+- ✅ 请求/响应日志审计
+
+## 文档
+
+- **完整架构文档**：[claude.md](./claude.md)
+- **Nacos 路由配置指南**：[NACOS-ROUTES-GUIDE.md](./NACOS-ROUTES-GUIDE.md)
+- **Auth Service 文档**：[../auth-service/README.md](../auth-service/README.md)
+
+## 许可证
+
+Copyright © 2025 Szmengran
+
+## 联系方式
+
+**维护者**：Joe <android_li@sina.cn>
+
+---
+
+**最后更新**：2025-11-16

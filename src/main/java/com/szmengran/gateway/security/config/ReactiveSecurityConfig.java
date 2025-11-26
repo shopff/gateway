@@ -18,9 +18,10 @@ import org.springframework.security.web.server.authentication.AuthenticationWebF
 import java.util.List;
 
 /**
- * @Description:
+ * @Description: Simplified Gateway Security Config - JWT Validation Only
  * @Auther: Maoyuan.Li
  * @Date: 2024/05/23 21:06
+ * @Modified: Joe - 2025/11/16 - Removed authentication filters, only JWT validation
  */
 @Slf4j
 @Configuration

@@ -1,0 +1,105 @@
+# ============================================================
+# Nacos 配置示例：gateway.yaml
+#
+# 使用说明：
+# 1. 登录 Nacos 控制台：http://localhost:8848/nacos
+# 2. 进入配置管理 -> 配置列表
+# 3. 创建配置：
+#    - Data ID: gateway.yaml
+#    - Group: DEFAULT_GROUP
+#    - 配置格式: YAML
+#    - 配置内容: 复制下面的内容
+# 4. 发布配置后，Gateway 会自动刷新路由（无需重启）
+# ============================================================
+
+spring:
+  cloud:
+    gateway:
+      # 动态路由配置
+      routes:
+        # ====================================
+        # Auth Service 路由配置
+        # ====================================
+        - id: auth-service
+          uri: lb://auth-service  # 通过 Nacos 服务发现，负载均衡
+          predicates:
+            - Path=/auth/**       # 匹配 /auth/** 的所有请求
+          filters:
+            - StripPrefix=0       # 不去除路径前缀，完整转发 /auth/**
+            - name: Retry         # 重试过滤器
+              args:
+                retries: 3                    # 重试 3 次
+                statuses: SERVICE_UNAVAILABLE # 503 错误时重试
+                methods: GET,POST             # GET 和 POST 请求重试
+                backoff:
+                  firstBackoff: 50ms          # 第一次重试延迟 50ms
+                  maxBackoff: 500ms           # 最大延迟 500ms
+                  factor: 2                   # 延迟倍数因子
+          metadata:
+            description: 认证服务路由
+
+        # ====================================
+        # 示例：其他微服务路由
+        # ====================================
+        # - id: user-service
+        #   uri: lb://user-service
+        #   predicates:
+        #     - Path=/api/users/**
+        #   filters:
+        #     - StripPrefix=2  # 去除 /api/users，转发给服务时变为 /**
+        #     - name: RequestRateLimiter
+        #       args:
+        #         redis-rate-limiter.replenishRate: 10  # 每秒生成令牌数
+        #         redis-rate-limiter.burstCapacity: 20  # 令牌桶容量
+        #         key-resolver: "#{@ipKeyResolver}"     # 使用 IP 限流
+
+        # - id: order-service
+        #   uri: lb://order-service
+        #   predicates:
+        #     - Path=/api/orders/**
+        #   filters:
+        #     - StripPrefix=2
+        #     - name: CircuitBreaker  # 熔断器
+        #       args:
+        #         name: orderServiceCircuitBreaker
+        #         fallbackUri: forward:/fallback
+
+      # ====================================
+      # 全局过滤器配置
+      # ====================================
+      default-filters:
+        - name: AddResponseHeader
+          args:
+            name: X-Response-Gateway
+            value: szmengran-gateway
+
+      # ====================================
+      # 全局 CORS 配置
+      # ====================================
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: false
+            maxAge: 3600
+
+# ====================================
+# 其他 Gateway 配置
+# ====================================
+# 超时配置
+#   httpclient:
+#     connect-timeout: 3000    # 连接超时 3 秒
+#     response-timeout: 10s    # 响应超时 10 秒
+
+# 路由刷新配置
+#   discovery:
+#     locator:
+#       enabled: true          # 启用服务发现路由
+#       lower-case-service-id: true  # 服务名转小写

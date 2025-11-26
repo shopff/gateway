@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM registry.cn-guangzhou.aliyuncs.com/szmengran/szmengran-docker-base:jdk17.0.12
 MAINTAINER Joe <android_li@sina.cn>
 ENV JAR_FILE gateway.jar
 #Set Beijing time zone
