@@ -33,7 +33,7 @@ public class JwtAuthorizationFilter implements ServerSecurityContextRepository {
         String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
         if (authHeader != null && authHeader.toLowerCase().startsWith("bearer ")) {
             String authToken = authHeader.substring(7);
-            UserInfo userInfo = jwtService.getUsernameFromToken(authToken);
+            UserInfo userInfo = jwtService.getUserInfoFromToken(authToken);
             if (userInfo != null) {
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userInfo.getUsername(), null, userInfo.getAuthorities());
                 return Mono.just(new SecurityContextImpl(auth));

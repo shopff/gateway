@@ -3,3 +3,15 @@ logging:
     com.alibaba.nacos: INFO
     com.alibaba.nacos.client.config.impl: DEBUG
     com.alibaba.nacos.client.config: DEBUG
+    org.springframework.security: TRACE
+    org.springframework.security.web: TRACE
+    org.springframework.security.config: TRACE
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.gateway.route.RouteDefinitionLocator: DEBUG
+    org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping: DEBUG
+    org.springframework.cloud.loadbalancer: DEBUG
+    org.springframework.cloud.client.loadbalancer: DEBUG
+    com.alibaba.cloud.nacos: DEBUG
+    com.alibaba.nacos.client: DEBUG
+    reactor.netty.http.client: DEBUG
+    reactor.netty.http.server: DEBUG

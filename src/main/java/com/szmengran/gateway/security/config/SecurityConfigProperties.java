@@ -4,6 +4,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Configuration;
 
 import java.nio.charset.StandardCharsets;
@@ -16,8 +17,9 @@ import java.util.List;
  * @Date: 2024/05/22 10:53
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@RefreshScope
 @Configuration
+@EqualsAndHashCode(callSuper = false)
 @ConfigurationProperties(prefix="secure")
 public class SecurityConfigProperties {
 

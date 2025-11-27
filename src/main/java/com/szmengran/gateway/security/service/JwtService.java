@@ -29,7 +29,7 @@ public class JwtService {
                 .compact();
     }
 
-    public UserInfo getUsernameFromToken(String token) {
+    public UserInfo getUserInfoFromToken(String token) {
         String json = Jwts.parserBuilder()
                 .setSigningKey(securityConfigProperties.getKey())
                 .build()
